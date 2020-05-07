@@ -13,8 +13,20 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+
+<!-- Every app has this file, it's basically like a table of contents.
+     This is where components of the app such as the activities, services, broadcasts,
+     permissions, and minimum API are listed.
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.android.miwok">
+
+    <!--the label is what makes the text appear at the top of the app
+        if this wasn't changed for each activity then they would all say Miwok at the top
+    -->
+
+    <!--the label names are using the @string stuff which comes from the res, values, strings.xml file
+    -->
 
     <application
         android:allowBackup="true"
