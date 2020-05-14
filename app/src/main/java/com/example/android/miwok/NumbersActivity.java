@@ -18,7 +18,9 @@ package com.example.android.miwok;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -81,9 +83,9 @@ public class NumbersActivity extends AppCompatActivity {
         //and then 2. create and add the TextViews to the LinearLayout
         //1. find the linear layout that was stored in rootView (the activity_numbers.xml)
         //specifically cast this view to a LinearLayout data type so that child views can be added to it
-        LinearLayout rootView = (LinearLayout)findViewById(R.id.rootView);
+        //LinearLayout rootView = (LinearLayout)findViewById(R.id.rootView);
         //2. create and add TextViews to the LinearLayout
-        //"this" refers to this class, which is NumberActivity so that's the context
+        /*//"this" refers to this class, which is NumberActivity so that's the context
         //create a TextView object and store it in a variable called wordView
         TextView wordView = new TextView(this);
         //change the text that is displayed on screen
@@ -94,8 +96,36 @@ public class NumbersActivity extends AppCompatActivity {
 
         TextView wordView2 = new TextView(this);
         wordView2.setText(words.get(1));
-        rootView.addView(wordView2);
+        rootView.addView(wordView2);*/
 
+        //loop tip: if the counter starts at 0 then count < n will loop n times; count < 10 = 10 times because that bonus 0th element
+
+        /*//loop to create and display a TextView for each element in the words list
+        for (int i = 0; i < words.size(); i++) {
+            //create a TextView object, store it in wordView variable
+            TextView wordView = new TextView(this);
+            //set the text that is displayed on the screen
+            wordView.setText(words.get(i));
+            //add the view as a child (wordView) to the parent view (rootView)
+            rootView.addView(wordView);
+        }*/
+
+        ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, words);
+
+        ListView listView = (ListView) findViewById(R.id.list);
+
+        listView.setAdapter(itemsAdapter);
 
     }
+
+    //view recycling (only showing 5 views at a time on the screen when there's like 1000 total)
+    //view recycling = reusing views that are no longer visible on the screen anymore
+    //view is the whole row, so like a contact in a phone book app
+    //is a combination of ListView and adapter and makes sure apps use less memory
+    //basically it costs a lot to inflate each view so you want to only create the ones that will be used
+    //instead of actually creating a the view for each one at the start
+    //it's a good idea to recycle views when there's a lot but better to just list them when it's a
+    //fixed number that's kinda small (twitter vs a list of my 7 favorite pokemon)
+    //good explanation of how ListView and ArrayAdapter work: https://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView
+
 }
