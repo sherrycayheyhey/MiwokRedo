@@ -67,65 +67,41 @@ public class NumbersActivity extends AppCompatActivity {
         words.add("nine");
         words.add("ten");
 
-        /*//logs to check that the list was created properly
-        Log.i("NumbersActivity", "Word at index 0: " + words.get(0));
-        Log.i("NumbersActivity", "Word at index 1: " + words.get(1));
-        Log.i("NumbersActivity", "Word at index 2: " + words.get(2));
-        Log.i("NumbersActivity", "Word at index 3: " + words.get(3));
-        Log.i("NumbersActivity", "Word at index 4: " + words.get(4));
-        Log.i("NumbersActivity", "Word at index 5: " + words.get(5));
-        Log.i("NumbersActivity", "Word at index 6: " + words.get(6));
-        Log.i("NumbersActivity", "Word at index 7: " + words.get(7));
-        Log.i("NumbersActivity", "Word at index 8: " + words.get(8));
-        Log.i("NumbersActivity", "Word at index 9: " + words.get(9));*/
+        //the ListView is powered by the ArrayAdapter, the ListView is just an empty container without the ArrayAdapter
+        //the ArrayAdapter holds on to an array or a list of data and knows how to translate (adapt)
+        //it to a list item view that will be displayed in the ListView
+        //here's the steps for how that works when a ListView is first associated to an ArrayAdapter:
+        //1. the ListView asks the ArrayAdapter how many items to display
+        //2. the ListView calls a method on the ArrayAdapter and gives it a position in the list (0, 1, 2, etc.)
+        //3. the ArrayAdapter checks the internal source of data (the array, list, whatever), and gets the info out (the value stored at that index)
+        //4. the arrayAdapter has instruction for how to make a list item view so it makes it with that item and returns it to the ListView
+        //5. when the screen is full, the ListView will stop asking for more items from the ArrayAdapter (views are only created on-demand, when needed)
+        //6. when views are scrolled off screen they are added to the scrap pile
+        //7. the scrap pile views are reused by passing them back to the ArrayAdapter when a new list item is requested
+        //8. the ListView asks for the item at the specific position and gives the ArrayAdapter the resusable scrap view
+        //9. the ArrayAdapted reuses the view by just changing the text in it like by using setText method
+        //10. the new list item is sent back to the ListView and added to the list
 
-        //to make text show up as a list when the numbers activity is opened, 1. find the LinearLayout,
-        //and then 2. create and add the TextViews to the LinearLayout
-        //1. find the linear layout that was stored in rootView (the activity_numbers.xml)
-        //specifically cast this view to a LinearLayout data type so that child views can be added to it
-        //LinearLayout rootView = (LinearLayout)findViewById(R.id.rootView);
-        //2. create and add TextViews to the LinearLayout
-        /*//"this" refers to this class, which is NumberActivity so that's the context
-        //create a TextView object and store it in a variable called wordView
-        TextView wordView = new TextView(this);
-        //change the text that is displayed on screen
-        //words.get(0) maps to the word "one"
-        wordView.setText(words.get(0));
-        //add the view as a child (wordView) to the parent view (rootView)
-        rootView.addView(wordView);
-
-        TextView wordView2 = new TextView(this);
-        wordView2.setText(words.get(1));
-        rootView.addView(wordView2);*/
-
-        //loop tip: if the counter starts at 0 then count < n will loop n times; count < 10 = 10 times because that bonus 0th element
-
-        /*//loop to create and display a TextView for each element in the words list
-        for (int i = 0; i < words.size(); i++) {
-            //create a TextView object, store it in wordView variable
-            TextView wordView = new TextView(this);
-            //set the text that is displayed on the screen
-            wordView.setText(words.get(i));
-            //add the view as a child (wordView) to the parent view (rootView)
-            rootView.addView(wordView);
-        }*/
-
+        //create an ArrayAdapter whose data source is a list of Strings
+        //the adapter creates layouts for each item in the list by using the layout resource defined
+        //in the Android framework (simple_list_item_1.xml)
+        //this style layout contains a single TextView which the adapter will set to display a single word
+        //the 3 things passed in here are the context (this = NumbersActivity), the layout file, and a list of objects
         ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, words);
-
+        //find the ListView object (ListView with id "list") from the activity_numbers.xml
         ListView listView = (ListView) findViewById(R.id.list);
-
+        //make the listView use the ArrayAdapter created above so the ListView will display the list items
+        //for each word in the list of words, aka, associate the ListView with the ArrayAdapter
         listView.setAdapter(itemsAdapter);
 
+        //in summary, ArrayAdapter knows about the data source (array, list) and it knows how to
+        //present each of the items in that data source as a view and the ListView handles showing
+        //those views on screen, detects user touch gestures, and maintains state of where the user is within
+        //the entire list, the ListView in charge of the user interface stuff side of stuff and the
+        //ArrayAdapter is the boss of the data
+        //since these guys are separated, you can swap out one part for another, for example,
+        //you could use the ArrayAdapter in a GridView instead or even a spinner (dropdown menu)
+
+
     }
-
-    //view recycling (only showing 5 views at a time on the screen when there's like 1000 total)
-    //view recycling = reusing views that are no longer visible on the screen anymore
-    //view is the whole row, so like a contact in a phone book app
-    //is a combination of ListView and adapter and makes sure apps use less memory
-    //basically it costs a lot to inflate each view so you want to only create the ones that will be used
-    //instead of actually creating a the view for each one at the start
-    //it's a good idea to recycle views when there's a lot but better to just list them when it's a
-    //fixed number that's kinda small (twitter vs a list of my 7 favorite pokemon)
-    //good explanation of how ListView and ArrayAdapter work: https://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView
-
 }
