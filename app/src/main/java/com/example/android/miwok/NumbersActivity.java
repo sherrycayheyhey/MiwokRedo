@@ -102,6 +102,8 @@ public class NumbersActivity extends AppCompatActivity {
         //since these guys are separated, you can swap out one part for another, for example,
         //you could use the ArrayAdapter in a GridView instead or even a spinner (dropdown menu)
 
+        //GridLayoutManager is the newer version of GridLayout and a tutorial can be found here:
+        //https://developer.android.com/guide/topics/ui/layout/recyclerview
 
     }
 }

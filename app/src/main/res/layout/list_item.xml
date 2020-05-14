@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Layout for a single list item -->
+<!-- xmlns = xml namespace -->
+<!-- if you use the tools namespace you can add stuff like placeholder text that only shows up
+        only during testing but not at runtime -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    >
+
+    <TextView
+        android:id="@+id/miwok_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        tools:text="lutti"
+        />
+
+    <TextView
+        android:id="@+id/default_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        tools:text="one"
+        />
+</LinearLayout>
