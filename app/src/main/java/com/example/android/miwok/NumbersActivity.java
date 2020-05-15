@@ -54,18 +54,19 @@ public class NumbersActivity extends AppCompatActivity {
 
         //ArrayList for list of numbers in English
         //ArrayList is the better structure here because more numbers might be added eventually
-
-        ArrayList<String> words = new ArrayList<String>();
-        words.add("one");
-        words.add("two");
-        words.add("three");
-        words.add("four");
-        words.add("five");
-        words.add("six");
-        words.add("seven");
-        words.add("eight");
-        words.add("nine");
-        words.add("ten");
+        //create a list of words
+        ArrayList<Word> words = new ArrayList<Word>();
+        //add words to the list, these are Word objects being created
+        words.add(new Word("one", "lutti"));
+        words.add(new Word("two", "otiiko"));
+        words.add(new Word("three","tolookosu"));
+        words.add(new Word("four", "oyyisa"));
+        words.add(new Word("five", "massokka"));
+        words.add(new Word("six", "temmokka"));
+        words.add(new Word("seven", "kenekaku"));
+        words.add(new Word("eight", "kawinta"));
+        words.add(new Word("nine", "wo'e"));
+        words.add(new Word("ten", "na'aacha"));
 
         //the ListView is powered by the ArrayAdapter, the ListView is just an empty container without the ArrayAdapter
         //the ArrayAdapter holds on to an array or a list of data and knows how to translate (adapt)
@@ -87,7 +88,7 @@ public class NumbersActivity extends AppCompatActivity {
         //in the Android framework (simple_list_item_1.xml)
         //this style layout contains a single TextView which the adapter will set to display a single word
         //the 3 things passed in here are the context (this = NumbersActivity), the layout file, and a list of objects
-        ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, words);
+        ArrayAdapter<Word> itemsAdapter = new ArrayAdapter<Word>(this, R.layout.list_item, words);
         //find the ListView object (ListView with id "list") from the activity_numbers.xml
         ListView listView = (ListView) findViewById(R.id.list);
         //make the listView use the ArrayAdapter created above so the ListView will display the list items
@@ -105,5 +106,10 @@ public class NumbersActivity extends AppCompatActivity {
         //GridLayoutManager is the newer version of GridLayout and a tutorial can be found here:
         //https://developer.android.com/guide/topics/ui/layout/recyclerview
 
+        //the ArrayAdapter class expects that it'll be populating a single TextView by default but the
+        //ListView we want to populate is more complex (it has two TextViews, the default translation
+        //and the Miwok translation and eventually an ImageView) so we'll have to override the getView()
+        //method with our own custom behavior and to do that we'll have to subclass the ArrayAdapter class
+        //to do that, a new class, WordAdapter was created and modified to inherit behavior from the ArrayAdapter class
     }
 }
