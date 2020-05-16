@@ -33,6 +33,7 @@ public class NumbersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_numbers);
 
         /* array vs ArrayList
+         *
          * array: can't change size, isn't a class, can't use methods to access and modify elements,
          * stores primitive and object data types
          * ArrayList: changes size, is a class, uses methods to access and modify elements, stores object data types
@@ -52,7 +53,7 @@ public class NumbersActivity extends AppCompatActivity {
          */
 
 
-        //ArrayList for list of numbers in English
+        //ArrayList for list of numbers in default (English) and Miwok
         //ArrayList is the better structure here because more numbers might be added eventually
         //create a list of words
         ArrayList<Word> words = new ArrayList<Word>();
@@ -68,32 +69,37 @@ public class NumbersActivity extends AppCompatActivity {
         words.add(new Word("nine", "wo'e"));
         words.add(new Word("ten", "na'aacha"));
 
-        //the ListView is powered by the ArrayAdapter, the ListView is just an empty container without the ArrayAdapter
-        //the ArrayAdapter holds on to an array or a list of data and knows how to translate (adapt)
-        //it to a list item view that will be displayed in the ListView
-        //here's the steps for how that works when a ListView is first associated to an ArrayAdapter:
-        //1. the ListView asks the ArrayAdapter how many items to display
-        //2. the ListView calls a method on the ArrayAdapter and gives it a position in the list (0, 1, 2, etc.)
-        //3. the ArrayAdapter checks the internal source of data (the array, list, whatever), and gets the info out (the value stored at that index)
-        //4. the arrayAdapter has instruction for how to make a list item view so it makes it with that item and returns it to the ListView
-        //5. when the screen is full, the ListView will stop asking for more items from the ArrayAdapter (views are only created on-demand, when needed)
-        //6. when views are scrolled off screen they are added to the scrap pile
-        //7. the scrap pile views are reused by passing them back to the ArrayAdapter when a new list item is requested
-        //8. the ListView asks for the item at the specific position and gives the ArrayAdapter the resusable scrap view
-        //9. the ArrayAdapted reuses the view by just changing the text in it like by using setText method
-        //10. the new list item is sent back to the ListView and added to the list
+        /* How ArrayAdapter and ListView Work (View Recycling, Too!)
+         *
+         * the ListView is powered by the ArrayAdapter, the ListView is just an empty container without the ArrayAdapter
+         * the ArrayAdapter holds on to an array or a list of data and knows how to translate (adapt)
+         * it to a list item view that will be displayed in the ListView
+         *
+         * here's the steps for how that works when a ListView is first associated to an ArrayAdapter:
+         * 1. the ListView asks the ArrayAdapter how many items to display
+         * 2. the ListView calls a method on the ArrayAdapter and gives it a position in the list (0, 1, 2, etc.)
+         * 3. the ArrayAdapter checks the internal source of data (the array, list, whatever), and gets the info out (the value stored at that index)
+         * 4. the arrayAdapter has instruction for how to make a list item view so it makes it with that item and returns it to the ListView
+         * 5. when the screen is full, the ListView will stop asking for more items from the ArrayAdapter (views are only created on-demand, when needed)
+         * 6. when views are scrolled off screen they are added to the scrap pile
+         * 7. the scrap pile views are reused by passing them back to the ArrayAdapter when a new list item is requested
+         * 8. the ListView asks for the item at the specific position and gives the ArrayAdapter the resusable scrap view
+         * 9. the ArrayAdapted reuses the view by just changing the text in it like by using setText method
+         * 10. the new list item is sent back to the ListView and added to the list
+         */
 
-        //create an ArrayAdapter whose data source is a list of Strings
+        //create a WordAdapter whose data source is an ArrayList of Word objects, as created above, and named words
         //the adapter creates layouts for each item in the list by using the layout resource defined
-        //in the Android framework (simple_list_item_1.xml)
-        //this style layout contains a single TextView which the adapter will set to display a single word
-        //the 3 things passed in here are the context (this = NumbersActivity), the layout file, and a list of objects
-        ArrayAdapter<Word> itemsAdapter = new ArrayAdapter<Word>(this, R.layout.list_item, words);
+        //in the list_item.xml file we made for a custom layout
+        //this layout contains two TextViews (and an image) which the custom adapter (WordAdapter) will
+        // set to display the two words (and image)
+        //the 2 things passed in here are the context (this = NumbersActivity) and the ArrayList of words
+        WordAdapter adapter = new WordAdapter(this, words);
         //find the ListView object (ListView with id "list") from the activity_numbers.xml
         ListView listView = (ListView) findViewById(R.id.list);
         //make the listView use the ArrayAdapter created above so the ListView will display the list items
-        //for each word in the list of words, aka, associate the ListView with the ArrayAdapter
-        listView.setAdapter(itemsAdapter);
+        //for each Word object in the ArrayList (words), aka, associate the ListView with the ArrayAdapter
+        listView.setAdapter(adapter);
 
         //in summary, ArrayAdapter knows about the data source (array, list) and it knows how to
         //present each of the items in that data source as a view and the ListView handles showing

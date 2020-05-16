@@ -25,5 +25,20 @@ public class Word {
         mMiwokTranslation = miwokTranslation;
     }
 
+    /**
+     * get the default translation (the WordAdapter class calls this to get the word)
+     */
+    public String getmDefaultTranslation() {
+        return mDefaultTranslation;
+    }
+
+    /**
+     * get the Miwok translation (the WordAdapter class calls this to get the word)
+     */
+    public String getmMiwokTranslation() {
+        return  mMiwokTranslation;
+    }
+
+
 
 }
