@@ -1,28 +1,38 @@
 package com.example.android.miwok;
 
 import android.app.Activity;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 //Word adapter inherits (extends) from the ArrayAdapter class and this WordAdapter class is also
 //customized to expect the data source to be a list of Word objects because we added <Word> to the class declaration
 public class WordAdapter extends ArrayAdapter<Word> {
 
+    /**resource ID for the background color of this list of words */
+    private int mColorResourceId;
+
     //constructor
     //the context is the current context, used to inflate the layout file
     //the list the the data wanted to populate into the lists, a list of Word objects to display in a list
-    public WordAdapter(Activity context, ArrayList<Word> words) {
+    //the colorResourceId is the category color for the different activities
+    public WordAdapter(Activity context, ArrayList<Word> words, int colorResourceId) {
         //the constructor from ArrayAdapter is being called (super())
         //here the ArrayAdapter's internal storage for the context and the list are initialized
         //the second argument is used when the ArrayAdapter is populating a single TextView
         //since this is a custom adapter for 2 TextViews and an ImageView, the adapter isn't going
         //to use this second argument so it can be any any value (we chose 0)
         super(context, 0, words);
+        mColorResourceId = colorResourceId;
     }
 
     //override the getView method so we can use more than one TextView to make populate the ListView
@@ -51,10 +61,30 @@ public class WordAdapter extends ArrayAdapter<Word> {
         //get the default translation from the current Word object and set the text on the default TextView
         defaultTextView.setText(currentWord.getmDefaultTranslation());
 
-        //find the TextView in the list_item.xml layout for the Miwok work
+        //find the TextView in the list_item.xml layout for the Miwok word
         TextView miwokTextView = (TextView) listItemView.findViewById(R.id.miwok_text_view);
         //get the default translation from the current Word object and set the text on the default TextView
         miwokTextView.setText(currentWord.getmMiwokTranslation());
+
+        //find the ImageView in the list_item.xml layout for the artwork
+        ImageView imageView = (ImageView) listItemView.findViewById(R.id.image);
+        //if there's an image, get the image from the current Word object and set the image on the ImageView
+        if(currentWord.hasImage()) {
+            imageView.setImageResource(currentWord.getmImageResourceID());
+            //make sure the view is visible
+            imageView.setVisibility(View.VISIBLE);
+        }
+        //if there's not an image, set the visibility to GONE
+        else {
+            imageView.setVisibility(View.GONE);
+            //INVISIBLE leaves the blank space for the image but GONE removes that space
+        }
+
+        //set the background color to the respective color
+        View textContainer = listItemView.findViewById(R.id.text_container);
+        //find the color that the resource ID maps to
+        int color = ContextCompat.getColor(getContext(), mColorResourceId);
+        textContainer.setBackgroundColor(color);
 
         return listItemView;
     }
