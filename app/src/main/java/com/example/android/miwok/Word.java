@@ -102,4 +102,17 @@ public class Word {
     public int getmSoundResourceId() {
         return mSoundResourceId;
     }
+
+
+    /* DEBUGGING TIP
+     * you can print the current state of an object to help with debugging instead of using the step-
+     * by-step debugger built into Android Studio
+     * 1. click on a blank line within the class and then automatically "Generate a method" (command
+     * + n) and choose toString()
+     * 2. this creates a concatenated string representing the entire object
+     * 3. you can now use that to call the toString method in places like the onItemClick of the
+     * NumbersActivity by doing this: Log.v("NumbersActivity", "Current word: " + word); which calls
+     * the toString method for you
+     *
+     */
 }
