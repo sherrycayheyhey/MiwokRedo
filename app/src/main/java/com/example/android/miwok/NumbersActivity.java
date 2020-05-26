@@ -15,13 +15,18 @@
  */
 package com.example.android.miwok;
 
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
 public class NumbersActivity extends AppCompatActivity {
+
+    private MediaPlayer mMediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,18 +57,29 @@ public class NumbersActivity extends AppCompatActivity {
         //ArrayList for list of numbers in default (English) and Miwok
         //ArrayList is the better structure here because more numbers might be added eventually
         //create a list of words
-        ArrayList<Word> words = new ArrayList<Word>();
+        //words has to be final so that you can use it to get it in the onItemClickListener below
+        final ArrayList<Word> words = new ArrayList<Word>();
         //add words to the list, these are Word objects being created
-        words.add(new Word("one", "lutti", R.drawable.number_one));
-        words.add(new Word("two", "otiiko", R.drawable.number_two));
-        words.add(new Word("three","tolookosu", R.drawable.number_three));
-        words.add(new Word("four", "oyyisa", R.drawable.number_four));
-        words.add(new Word("five", "massokka", R.drawable.number_five));
-        words.add(new Word("six", "temmokka", R.drawable.number_six));
-        words.add(new Word("seven", "kenekaku", R.drawable.number_seven));
-        words.add(new Word("eight", "kawinta", R.drawable.number_eight));
-        words.add(new Word("nine", "wo'e", R.drawable.number_nine));
-        words.add(new Word("ten", "na'aacha", R.drawable.number_ten));
+        words.add(new Word("one", "lutti", R.drawable.number_one,
+                R.raw.number_one));
+        words.add(new Word("two", "otiiko", R.drawable.number_two,
+                R.raw.number_two));
+        words.add(new Word("three", "tolookosu", R.drawable.number_three,
+                R.raw.number_three));
+        words.add(new Word("four", "oyyisa", R.drawable.number_four,
+                R.raw.number_four));
+        words.add(new Word("five", "massokka", R.drawable.number_five,
+                R.raw.number_five));
+        words.add(new Word("six", "temmokka", R.drawable.number_six,
+                R.raw.number_six));
+        words.add(new Word("seven", "kenekaku", R.drawable.number_seven,
+                R.raw.number_seven));
+        words.add(new Word("eight", "kawinta", R.drawable.number_eight,
+                R.raw.number_eight));
+        words.add(new Word("nine", "wo'e", R.drawable.number_nine,
+                R.raw.number_nine));
+        words.add(new Word("ten", "na'aacha", R.drawable.number_ten,
+                R.raw.number_ten));
 
         /* How ArrayAdapter and ListView Work (View Recycling, Too!)
          *
@@ -90,7 +106,7 @@ public class NumbersActivity extends AppCompatActivity {
         //this layout contains two TextViews (and an image) which the custom adapter (WordAdapter) will
         // set to display the two words (and image)
         //the 3 things passed in here are the context (this = NumbersActivity), the ArrayList of words, and the color resource
-        WordAdapter adapter = new WordAdapter(this, words, R.color.category_numbers);
+        WordAdapter adapter = new WordAdapter(this, words, R.color.category_numbers, R.raw.number_one);
         //find the ListView object (ListView with id "list") from the word_list.xml
         ListView listView = (ListView) findViewById(R.id.list);
         //make the listView use the ArrayAdapter created above so the ListView will display the list items
@@ -113,5 +129,29 @@ public class NumbersActivity extends AppCompatActivity {
         //and the Miwok translation and eventually an ImageView) so we'll have to override the getView()
         //method with our own custom behavior and to do that we'll have to subclass the ArrayAdapter class
         //to do that, a new class, WordAdapter was created and modified to inherit behavior from the ArrayAdapter class
+
+
+        /* STEPS TO PLAY A SOUND WHEN A LIST ITEM IS CLICKED
+         *
+         * 1. update the word class to store audio information for each word: add the sound part to
+         *      both constructors and make a getter for retrieving the sound id
+         *2. update each Word in the list of Word objects to include the sound id
+         *3. create/update the OnItemClickListener to play the correct sound for the respective Word:
+         *      get the position if the Word in the list, get the sound id of it by calling the getting in the Word class
+         */
+
+
+        //set the onItemClickListener so that audio plays when a list item is clicked
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                //get the {@link Word} object at the position the user clicked on
+                Word word = words.get(position);
+
+                //create and setup the {@link MediaPlayer} for the audio resource of the selected item
+                mMediaPlayer = MediaPlayer.create(NumbersActivity.this, word.getmSoundResourceId());
+                mMediaPlayer.start();
+            }
+        });
     }
 }

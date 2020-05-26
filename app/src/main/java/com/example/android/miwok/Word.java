@@ -21,6 +21,11 @@ public class Word {
     /** image status */
     private static final int NO_IMAGE_PROVIDED = -1;
 
+    /**
+     * id of the sound
+     */
+    private int mSoundResourceId;
+
 
     //********CONSTRUCTORS********
 
@@ -31,10 +36,13 @@ public class Word {
      * @param defaultTranslation is the word in a language that the user already knows
      *
      * @param miwokTranslation is the word in the Miwok language
+     *
+     * @param sound is the spoken word
      */
-    public Word(String defaultTranslation, String miwokTranslation){
+    public Word(String defaultTranslation, String miwokTranslation, int sound){
         mDefaultTranslation = defaultTranslation;
         mMiwokTranslation = miwokTranslation;
+        mSoundResourceId = sound;
     }
 
     /**
@@ -45,11 +53,14 @@ public class Word {
      * @param miwokTranslation is the word in the Miwok language
      *
      * @param imageResourceId is the int drawable resource id for the associated image
+     *
+     * @param sound is the spoken word
      */
-    public Word(String defaultTranslation, String miwokTranslation, int imageResourceId){
+    public Word(String defaultTranslation, String miwokTranslation, int imageResourceId, int sound){
         mDefaultTranslation = defaultTranslation;
         mMiwokTranslation = miwokTranslation;
         mImageResourceId = imageResourceId;
+        mSoundResourceId = sound;
     }
 
 
@@ -83,5 +94,12 @@ public class Word {
     public boolean hasImage() {
         //is the image equal to the NO_IMAGE_PROVIDED constant?
         return mImageResourceId != NO_IMAGE_PROVIDED; //returns true if these is an image, false if there isn't
+    }
+
+    /**
+     * get the sound id (the Number/Phrases/Family/ColorActivities classes calls this to get the sound)
+     */
+    public int getmSoundResourceId() {
+        return mSoundResourceId;
     }
 }

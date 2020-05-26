@@ -20,12 +20,13 @@ public class WordAdapter extends ArrayAdapter<Word> {
 
     /**resource ID for the background color of this list of words */
     private int mColorResourceId;
+    private int mSoundResourceId;
 
     //constructor
     //the context is the current context, used to inflate the layout file
     //the list the the data wanted to populate into the lists, a list of Word objects to display in a list
     //the colorResourceId is the category color for the different activities
-    public WordAdapter(Activity context, ArrayList<Word> words, int colorResourceId) {
+    public WordAdapter(Activity context, ArrayList<Word> words, int colorResourceId, int soundResourceId) {
         //the constructor from ArrayAdapter is being called (super())
         //here the ArrayAdapter's internal storage for the context and the list are initialized
         //the second argument is used when the ArrayAdapter is populating a single TextView
@@ -33,6 +34,7 @@ public class WordAdapter extends ArrayAdapter<Word> {
         //to use this second argument so it can be any any value (we chose 0)
         super(context, 0, words);
         mColorResourceId = colorResourceId;
+        mSoundResourceId = soundResourceId;
     }
 
     //override the getView method so we can use more than one TextView to make populate the ListView
