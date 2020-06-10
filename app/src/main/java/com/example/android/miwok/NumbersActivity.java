@@ -15,6 +15,8 @@
  */
 package com.example.android.miwok;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,7 +29,53 @@ import java.util.ArrayList;
 
 public class NumbersActivity extends AppCompatActivity {
 
+    //handles playback of all the sound files
     private MediaPlayer mMediaPlayer;
+
+    // handles  audio focus when playing a sound file (AM1)
+    private AudioManager mAudioManager;
+
+    // create the focus change listener and implement the callback (AM5)
+    AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener =
+            new AudioManager.OnAudioFocusChangeListener() {
+                public void onAudioFocusChange(int focusChange) {
+                    if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ||
+                            focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                        //pause playback
+                        mMediaPlayer.pause();
+                        //chose 0 to start at the start because it's better to hear the whole word over again
+                        mMediaPlayer.seekTo(0);
+                    } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                        //regained focus, resume playback
+                        mMediaPlayer.start();
+                    } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                        //stop playback, clean up
+                        releaseMediaPlayer();
+                    }
+                }
+            };
+
+    /* managing audio focus in the app, how to manage the focus change state so that audio interruptions are handled properly
+     *
+     * 1. request audio focus:
+     * 2. create an instance of AudioManager.OnAudioFocusChangeListener and implement the callback method
+     * 3. adapt playback behavior when audio focus state changes
+     * 4. release audio focus when no longer needed
+     *
+     * the steps in action:
+     * STEP 1
+     *first, this means we need an AudioManager object instance, as was added above:
+     *      private AudioManager mAudioManager; (AM1)
+     * next, initialize the audio manager in the onCreate method (AM2)
+     * next, request audio focus for playback in the onItemClick method (AM3)
+     * next, see if audio focus was granted and play the clip if it was (AM4)
+     *
+     * STEP 2 & Step 3
+     * this code is above (AM5)
+     *
+     * STEP 4
+     * add code to the releaseMediaPlayer() method (AM6)
+     */
 
     //this listener is triggered when the MediaPlayer completes playing the audio file
     private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
@@ -42,6 +90,9 @@ public class NumbersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.word_list);
+
+        // create and setup the AudioManager to request audio focus (AM2)
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         /* array vs ArrayList
          *
@@ -161,13 +212,28 @@ public class NumbersActivity extends AppCompatActivity {
                 //release any previous playing audio before making a new MediaPlayer
                 releaseMediaPlayer();
 
-                //create and setup the {@link MediaPlayer} for the audio resource of the selected item
-                mMediaPlayer = MediaPlayer.create(NumbersActivity.this, word.getmSoundResourceId());
-                mMediaPlayer.start();
+                // request audio focus for playback (AM3)
+                //pass in a listener, specify the music stream type, and how long to request audio for
+                int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener,
+                        //music stream type
+                        AudioManager.STREAM_MUSIC,
+                        //how long we need the audio, not sure long since the clips are only a few seconds
+                        AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
 
-                // setup a listener on the MediaPlayer so we can stop and release the MediaPlayer once
-                // the sound has finished playing
-                mMediaPlayer.setOnCompletionListener(mCompletionListener);
+                //if given audio focus, play the clip (AM4)
+                if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                    //mAudioManager.registerMediaButtonEventReceiver(RemoteControlReceiver);
+                    //once gained, create and start the media player
+
+
+                    //create and setup the {@link MediaPlayer} for the audio resource of the selected item
+                    mMediaPlayer = MediaPlayer.create(NumbersActivity.this, word.getmSoundResourceId());
+                    mMediaPlayer.start();
+
+                    // setup a listener on the MediaPlayer so we can stop and release the MediaPlayer once
+                    // the sound has finished playing
+                    mMediaPlayer.setOnCompletionListener(mCompletionListener);
+                }
             }
         });
     }
@@ -195,6 +261,9 @@ public class NumbersActivity extends AppCompatActivity {
             // setting the media player to null is an easy way to tell that the media player
             // is not configured to play an audio file at the moment.
             mMediaPlayer = null;
+
+            // abandon audio focus when playback complete (AM6)
+            mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
         }
     }
 }

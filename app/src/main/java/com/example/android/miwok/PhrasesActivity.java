@@ -62,6 +62,7 @@ public class PhrasesActivity extends AppCompatActivity {
         words.add(new Word("I’m coming.", "әәnәm", R.raw.phrase_im_coming));
         words.add(new Word("Let’s go.", "yoowutis", R.raw.phrase_lets_go));
         words.add(new Word("Come here.", "әnni'nem", R.raw.phrase_come_here));
+        words.add(new Word("blah blah.", "әnni'nem", R.raw.phrase_come_here));
 
         //create a WordAdapter whose data source is an ArrayList of Word objects then combine it with the ListView
         WordAdapter adapter = new WordAdapter(this, words, R.color.category_phrases, R.raw.number_one);
