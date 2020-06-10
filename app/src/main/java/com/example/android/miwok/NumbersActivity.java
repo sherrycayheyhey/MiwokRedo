@@ -173,6 +173,15 @@ public class NumbersActivity extends AppCompatActivity {
     }
 
     /**
+     * onStop method that will release the media player resources because they activity is navigated away from
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        releaseMediaPlayer();
+    }
+
+    /**
      * Helper method for Cleaning up the media player by releasing its resources.
      */
     private void releaseMediaPlayer() {
